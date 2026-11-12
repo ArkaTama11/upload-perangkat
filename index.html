@@ -469,13 +469,7 @@
 
       <!-- ================= FORM ================= -->
       <form class="card" id="uploadForm" novalidate>
-        <!-- 1. Nama Guru -->
-        <div class="field">
-          <label for="nama">Nama Guru <span class="req">*</span></label>
-          <input class="input" type="text" id="nama" name="nama" placeholder="cth: Siti Aminah, S.Pd." autocomplete="name" />
-        </div>
-
-        <!-- 2. Kelas -->
+        <!-- 1. Kelas -->
         <div class="field">
           <span class="label" id="kelasLabel">Kelas <span class="req">*</span></span>
           <div class="chips" role="group" aria-labelledby="kelasLabel">
@@ -485,7 +479,7 @@
           </div>
         </div>
 
-        <!-- 3. Mata Pelajaran -->
+        <!-- 2. Mata Pelajaran -->
         <div class="field">
           <label for="mapel">Mata Pelajaran <span class="req">*</span></label>
           <div class="select-wrap">
@@ -511,7 +505,7 @@
           </div>
         </div>
 
-        <!-- 4. Upload Perangkat: satu slot per komponen -->
+        <!-- 3. Upload Perangkat: satu slot per komponen -->
         <div class="field upload-section">
           <p class="section-title">Upload Perangkat</p>
           <p class="section-hint">Isi yang sudah siap saja — boleh sebagian. File .docx atau .pdf, satu file per kolom, maksimal 25 MB per file.</p>
@@ -559,7 +553,7 @@
           </div>
         </div>
 
-        <!-- 5. Kirim -->
+        <!-- 4. Kirim -->
         <div class="form-error" id="formError" role="alert" hidden></div>
         <button type="submit" class="submit-btn" id="submitBtn">
           <span class="spinner" id="submitSpinner" hidden aria-hidden="true"></span>
@@ -600,7 +594,6 @@
         var POLL_TIMEOUT_MS = 90000;
 
         var form = document.getElementById("uploadForm");
-        var namaInput = document.getElementById("nama");
         var mapelSelect = document.getElementById("mapel");
         var chips = Array.prototype.slice.call(document.querySelectorAll(".chip"));
         var slots = Array.prototype.slice.call(document.querySelectorAll(".slot"));
@@ -720,7 +713,6 @@
           submitLabel.textContent = on ? "Mengirim…" : "Kirim ke Drive";
           submitSpinner.hidden = !on;
           submitIcon.style.display = on ? "none" : "";
-          namaInput.disabled = on;
           mapelSelect.disabled = on;
           chips.forEach(function (c) { c.disabled = on; });
           slots.forEach(function (slot) {
@@ -735,7 +727,7 @@
           hideFormError();
           if (submittedMeta) {
             successMsg.textContent = "Terima kasih — perangkat " + submittedMeta.mapel +
-              " Kelas " + submittedMeta.kelas + " dari " + submittedMeta.nama +
+              " Kelas " + submittedMeta.kelas +
               " sudah diterima dan tercatat di rekap waka kurikulum.";
           } else {
             successMsg.textContent = "Terima kasih — perangkat Anda sudah diterima dan tercatat di rekap waka kurikulum.";
@@ -823,15 +815,9 @@
           hideFormError();
           hideStatus();
 
-          var nama = namaInput.value.trim();
           var mapel = mapelSelect.value;
           var jenisTerisi = Object.keys(slotFiles);
 
-          if (!nama) {
-            showFormError("Nama Guru belum diisi — mohon isi nama Anda terlebih dahulu.");
-            namaInput.focus();
-            return;
-          }
           if (!selectedKelas) {
             showFormError("Kelas belum dipilih — sentuh salah satu tombol kelas 7, 8, atau 9.");
             return;
@@ -847,7 +833,7 @@
           }
 
           if (!submissionId) submissionId = makeId();
-          submittedMeta = { nama: nama, mapel: mapel, kelas: selectedKelas };
+          submittedMeta = { mapel: mapel, kelas: selectedKelas };
           setSending(true);
           showStatus("Mengirim… file sedang diunggah dan disimpan ke Google Drive. Mohon jangan tutup halaman ini.");
 
@@ -866,7 +852,6 @@
                 key: KEY,
                 action: "upload",
                 id: submissionId,
-                nama: nama,
                 mapel: mapel,
                 kelas: selectedKelas,
                 files: files
